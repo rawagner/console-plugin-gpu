@@ -64,7 +64,7 @@ objects:
                   mountPath: /var/serving-cert
                 - name: nginx-conf
                   readOnly: true
-                  mountPath: /etc/nginx/nginx.conf
+                  mountPath: /opt/app-root/etc/nginx.d/nginx.conf
                   subPath: nginx.conf
           volumes:
             - name: plugin-serving-cert
