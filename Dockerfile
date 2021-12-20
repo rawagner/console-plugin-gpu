@@ -1,4 +1,5 @@
-FROM node:16 AS build
+FROM registry-proxy.engineering.redhat.com/rh-osbs/rhacm2-yarn-builder:v2.3.0_14-1.20210810163126 AS build
+RUN dnf install -y git
 
 ADD . /usr/src/app
 WORKDIR /usr/src/app
