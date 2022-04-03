@@ -55,7 +55,8 @@
     "exposedModules": {
       "clusterOverview": "./utils/cluster-overview",
       "clusterStatus": "./components/GPUStatus",
-      "clusterInventory": "./components/GPUClusterInventory"
+      "clusterInventory": "./components/GPUClusterInventory",
+      "gpuDashboard": "./components/GPUDashboard"
     },
     "dependencies": {
       "@console/pluginAPI": "*"

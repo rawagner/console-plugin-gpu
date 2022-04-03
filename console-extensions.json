@@ -47,5 +47,26 @@
     "properties": {
       "component": { "$codeRef": "clusterInventory.default" }
     }
+  },
+  {
+    "type": "console.navigation/href",
+    "properties": {
+      "id": "gpu-dashboard",
+      "perspective": "admin",
+      "section": "compute",
+      "name": "%plugin__console-plugin-nvidia-gpu~GPUs%",
+      "href": "/gpu-dashboard",
+      "namespaced": false
+    }
+  },
+  {
+    "type": "console.page/route",
+    "properties": {
+      "exact": true,
+      "path": ["/gpu-dashboard"],
+      "component": {
+        "$codeRef": "gpuDashboard.default"
+      }
+    }
   }
 ]
