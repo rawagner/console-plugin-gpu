@@ -56,6 +56,7 @@
       "clusterOverview": "./utils/cluster-overview",
       "clusterStatus": "./components/GPUStatus",
       "clusterInventory": "./components/GPUClusterInventory",
+      "gpuOperatorFeatureFlag": "./utils/gpuOperatorFeatureFlag",
       "gpuDashboard": "./components/GPUDashboard"
     },
     "dependencies": {

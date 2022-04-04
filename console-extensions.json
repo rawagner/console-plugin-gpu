@@ -8,6 +8,12 @@
  */
 [
   {
+    "type": "console.flag",
+    "properties": {
+      "handler": { "$codeRef": "gpuOperatorFeatureFlag.handler" }
+    }
+  },
+  {
     "type": "console.cluster-overview/utilization-item",
     "properties": {
       "title": "%plugin__console-plugin-nvidia-gpu~GPU%",
@@ -57,6 +63,9 @@
       "name": "%plugin__console-plugin-nvidia-gpu~GPUs%",
       "href": "/gpu-dashboard",
       "namespaced": false
+    },
+    "flags": {
+      "required": ["GPU_OPERATOR"]
     }
   },
   {
@@ -67,6 +76,9 @@
       "component": {
         "$codeRef": "gpuDashboard.default"
       }
+    },
+    "flags": {
+      "required": ["GPU_OPERATOR"]
     }
   }
 ]
