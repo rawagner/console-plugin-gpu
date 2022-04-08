@@ -13,6 +13,7 @@ import {
   Gallery,
   Page,
   PageSection,
+  Skeleton,
 } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 import {
@@ -59,7 +60,7 @@ import {
 
 // Missing: Fan speed
 
-type GPUDashboardCardProps = {
+type GPUDashboardCardGenericProps = {
   title: string;
   ariaTitle: string;
   rangeDescription: string;
@@ -68,7 +69,13 @@ type GPUDashboardCardProps = {
   maxDomain: number /* I.e. 100 (like 100%) */;
 };
 
-type GPUDashboardCardGraphsProps = GPUDashboardCardProps & {
+type GPUDashboardCardProps = GPUDashboardCardGenericProps & {
+  actualQuery: string;
+  timeQuery: string;
+  loading: boolean;
+};
+
+type GPUDashboardCardGraphsProps = GPUDashboardCardGenericProps & {
   scalarValue: number;
   timeSerie: PrometheusTimeSerie;
 };
@@ -81,7 +88,7 @@ const GPUDashboardCardError: React.FC<{ error: any }> = ({ error }) => {
 
 const GPUDashboardCardLoading: React.FC = () => {
   // TODO: use a spinner instead?
-  return <div className="skeleton-inventory" />;
+  return <Skeleton shape="square" width="100%" screenreaderText="Loading card content" />;
 };
 
 const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
@@ -138,7 +145,12 @@ const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
   );
 };
 
-const GPUDashboardCard: React.FC<GPUDashboardCardProps> = (props) => {
+const GPUDashboardCard: React.FC<GPUDashboardCardProps> = ({
+  actualQuery,
+  timeQuery,
+  loading,
+  ...props
+}) => {
   const { title } = props;
 
   //   {
@@ -158,27 +170,24 @@ const GPUDashboardCard: React.FC<GPUDashboardCardProps> = (props) => {
   //   /** A vector-query search parameter */
   //   timespan?: number;
   // };
-
   const [resultActual, errorActual, loadingActual] = usePrometheusPoll({
     endpoint: PrometheusEndpoint.QUERY,
-    query: 'DCGM_FI_DEV_GPU_TEMP{UUID="GPU-43d4af7b-4cbb-1577-c1d4-e908416fda4a"}',
+    query: actualQuery,
   });
 
   const [resultTime, errorTime, loadingTime] = usePrometheusPoll({
     endpoint: PrometheusEndpoint.QUERY,
-    // a 5-minute average for the last one hour with 5-minute step
-    query:
-      'avg_over_time(DCGM_FI_DEV_GPU_TEMP{UUID="GPU-43d4af7b-4cbb-1577-c1d4-e908416fda4a"}[5m])[60m:5m]',
+    query: timeQuery,
   });
 
   const scalarValue = getPrometheusResultScalarNumber(resultActual);
   const timeSerie = getPrometheusResultTimeSerie(resultTime);
 
   const error = errorActual && errorTime;
-  const loading = (loadingActual && loadingTime) || !scalarValue || !timeSerie;
+  loading = loading || (loadingActual && loadingTime) || !scalarValue || !timeSerie;
 
   return (
-    <Card>
+    <Card height={'25rem'}>
       <CardTitle className="pf-u-text-align-center">{title}</CardTitle>
       {error && <GPUDashboardCardError error={error} />}
       {!error && loading && <GPUDashboardCardLoading />}
@@ -191,18 +200,26 @@ const GPUDashboardCard: React.FC<GPUDashboardCardProps> = (props) => {
 
 const GPUDashboard: React.FC = () => {
   const { t } = useTranslation('plugin__console-plugin-nvidia-gpu');
+  const [gpuUuid] = React.useState<string>('GPU-43d4af7b-4cbb-1577-c1d4-e908416fda4a'); // GPU-43d4af7b-4cbb-1577-c1d4-e908416fda4a
+
+  const loading = !gpuUuid;
+
+  // a 5-minute average for the last one hour with 5-minute step
 
   return (
     <Page>
       <PageSection isFilled>
         <Gallery>
           <GPUDashboardCard
+            actualQuery={`DCGM_FI_DEV_GPU_TEMP{UUID="${gpuUuid}"}`}
+            timeQuery={`avg_over_time(DCGM_FI_DEV_GPU_TEMP{UUID="${gpuUuid}"}[5m])[60m:5m]`}
             title={t('GPU utilization')}
             ariaTitle={t('Donut GPU utilization')}
-            unit="%"
-            maxDomain={100}
             rangeTitle={t('GPU utilization over time')}
             rangeDescription={t('Sparkline GPU utilization')}
+            unit="%"
+            maxDomain={100}
+            loading={loading}
           />
         </Gallery>
       </PageSection>
