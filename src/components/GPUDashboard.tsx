@@ -13,13 +13,17 @@ import {
   Gallery,
   Page,
   PageSection,
+  Popover,
   Skeleton,
+  Stack,
+  StackItem,
 } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 import {
   usePrometheusPoll,
   PrometheusEndpoint,
   humanize,
+  BlueInfoCircleIcon,
 } from '@openshift-console/dynamic-plugin-sdk';
 
 import {
@@ -27,6 +31,8 @@ import {
   getPrometheusResultTimeSerie,
   PrometheusTimeSerie,
 } from '../utils/prometheus';
+
+import './GPUDashboard.css';
 
 /* Chaotic list of TODOs:
   - Add "New" badge in gpu-dashboard nav item - replace string by a component in console-extensions.json
@@ -73,6 +79,7 @@ type GPUDashboardCardProps = GPUDashboardCardGenericProps & {
   actualQuery: string;
   timeQuery: string;
   loading: boolean;
+  info?: React.ReactElement;
 };
 
 type GPUDashboardCardGraphsProps = GPUDashboardCardGenericProps & {
@@ -145,10 +152,37 @@ const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
   );
 };
 
+type GPUDashboardCardInfoProps = {
+  header: string;
+  actualInfo: string;
+  timeInfo?: string;
+};
+
+const GPUDashboardCardInfo: React.FC<GPUDashboardCardInfoProps> = ({
+  header,
+  actualInfo,
+  timeInfo,
+}) => (
+  <Popover
+    aria-label="Dashboard card description"
+    maxWidth="15rem"
+    headerContent={<div>{header}</div>}
+    bodyContent={
+      <Stack hasGutter>
+        <StackItem>{actualInfo}</StackItem>
+        {timeInfo && <StackItem>{timeInfo}</StackItem>}
+      </Stack>
+    }
+  >
+    <BlueInfoCircleIcon className="gpu-dashboard__card-info-icon" />
+  </Popover>
+);
+
 const GPUDashboardCard: React.FC<GPUDashboardCardProps> = ({
   actualQuery,
   timeQuery,
   loading,
+  info,
   ...props
 }) => {
   const { title } = props;
@@ -184,11 +218,14 @@ const GPUDashboardCard: React.FC<GPUDashboardCardProps> = ({
   const timeSerie = getPrometheusResultTimeSerie(resultTime);
 
   const error = errorActual && errorTime;
-  loading = loading || (loadingActual && loadingTime) || !scalarValue || !timeSerie;
+  loading = loading || (loadingActual && loadingTime) || scalarValue === undefined || !timeSerie;
 
   return (
     <Card height={'25rem'}>
-      <CardTitle className="pf-u-text-align-center">{title}</CardTitle>
+      <CardTitle className="pf-u-text-align-center">
+        {title}
+        {info}
+      </CardTitle>
       {error && <GPUDashboardCardError error={error} />}
       {!error && loading && <GPUDashboardCardLoading />}
       {!error && !loading && (
@@ -204,21 +241,28 @@ const GPUDashboard: React.FC = () => {
 
   const loading = !gpuUuid;
 
-  // a 5-minute average for the last one hour with 5-minute step
-
   return (
     <Page>
       <PageSection isFilled>
         <Gallery>
           <GPUDashboardCard
-            actualQuery={`DCGM_FI_DEV_GPU_TEMP{UUID="${gpuUuid}"}`}
-            timeQuery={`avg_over_time(DCGM_FI_DEV_GPU_TEMP{UUID="${gpuUuid}"}[5m])[60m:5m]`}
             title={t('GPU utilization')}
             ariaTitle={t('Donut GPU utilization')}
             rangeTitle={t('GPU utilization over time')}
             rangeDescription={t('Sparkline GPU utilization')}
+            actualQuery={`DCGM_FI_DEV_GPU_UTIL{UUID="${gpuUuid}"}`}
+            timeQuery={`avg_over_time(DCGM_FI_DEV_GPU_UTIL{UUID="${gpuUuid}"}[5m])[60m:5m]`}
             unit="%"
             maxDomain={100}
+            info={
+              <GPUDashboardCardInfo
+                header={t('GPU utilization')}
+                actualInfo={t('Shows actual utilization of the GPU.')}
+                timeInfo={t(
+                  'The sparkling chart bellow shows 5-minute average for the last one hour with 5-minute step.',
+                )}
+              />
+            }
             loading={loading}
           />
         </Gallery>
