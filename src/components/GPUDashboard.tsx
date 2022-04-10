@@ -72,7 +72,7 @@ type GPUDashboardCardGenericProps = {
   rangeDescription: string;
   rangeTitle: string;
   unit: string /* I.e. '%'*/;
-  maxDomain: number /* I.e. 100 (like 100%) */;
+  maxDomain?: number /* I.e. 100 (like 100%) */;
 };
 
 type GPUDashboardCardProps = GPUDashboardCardGenericProps & {
@@ -94,7 +94,6 @@ const GPUDashboardCardError: React.FC<{ error: any }> = ({ error }) => {
 };
 
 const GPUDashboardCardLoading: React.FC = () => {
-  // TODO: use a spinner instead?
   return <Skeleton shape="square" width="100%" screenreaderText="Loading card content" />;
 };
 
@@ -120,9 +119,13 @@ const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
     y: pair.value,
   }));
 
+  if (!maxDomain) {
+    const max = Math.max(...timeSerie.map((pair) => pair.value));
+    maxDomain = max * 1.2; // Add 20%. Can we have minus values for something??
+  }
+
   return (
     <>
-      {/* TODO: Add Info describing shown data (What numbers are we looking at? Per metric. Per scalar and vector. ) */}
       <CardBody>
         <ChartDonutUtilization
           ariaDesc={title}
@@ -139,7 +142,7 @@ const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
           ariaDesc={rangeDescription}
           ariaTitle={rangeTitle}
           containerComponent={
-            <ChartVoronoiContainer labels={getDatumLabel} constrainToVisibleArea={false} />
+            <ChartVoronoiContainer labels={getDatumLabel} constrainToVisibleArea={true} />
           }
           height={90}
           maxDomain={{ y: maxDomain }}
@@ -244,7 +247,7 @@ const GPUDashboard: React.FC = () => {
   return (
     <Page>
       <PageSection isFilled>
-        <Gallery>
+        <Gallery hasGutter>
           <GPUDashboardCard
             title={t('GPU utilization')}
             ariaTitle={t('Donut GPU utilization')}
@@ -260,6 +263,27 @@ const GPUDashboard: React.FC = () => {
                 actualInfo={t('Shows actual utilization of the GPU.')}
                 timeInfo={t(
                   'The sparkling chart bellow shows 5-minute average for the last one hour with 5-minute step.',
+                )}
+              />
+            }
+            loading={loading}
+          />
+
+          <GPUDashboardCard
+            title={t('GPU temperature')}
+            ariaTitle={t('Donut GPU temperature')}
+            rangeTitle={t('GPU temperature over time')}
+            rangeDescription={t('Sparkline GPU temperature')}
+            actualQuery={`DCGM_FI_DEV_GPU_TEMP{UUID="${gpuUuid}"}`}
+            timeQuery={`max_over_time(DCGM_FI_DEV_GPU_TEMP{UUID="${gpuUuid}"}[5m])[60m:5m]`}
+            unit="°C"
+            // maxDomain={100}
+            info={
+              <GPUDashboardCardInfo
+                header={t('GPU utiliztemperatureation')}
+                actualInfo={t('Shows actual temperature of the GPU.')}
+                timeInfo={t(
+                  'The sparkling chart bellow shows 5-minute maximum for the last one hour with 5-minute step.',
                 )}
               />
             }
