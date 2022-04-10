@@ -1,3 +1,7 @@
 .gpu-dashboard__card-info-icon {
   float: right;
 }
+
+.gpu-dashboard__dropdown-gpus {
+  float: right;
+}
