@@ -43,11 +43,12 @@ import './GPUDashboard.css';
 
 /* Chaotic list of TODOs:
   - Add "New" badge in gpu-dashboard nav item - replace string by a component in console-extensions.json
-  - i18n texts
   - split components to multiple files
   - add GPU Info component (with its details)
   - tune polling interval
   - card sizes on different displayes
+  - tune thresholds
+  - read maximum for non-percentage metrics (use either GPU-info or find maximum over all-time Prometheus data)
 */
 
 // https://issues.redhat.com/browse/MGMT-9263
@@ -62,6 +63,7 @@ type GPUDashboardCardGenericProps = {
   rangeTitle: string;
   unit: string /* I.e. '%'*/;
   maxDomain?: number /* I.e. 100 (like 100%) */;
+  thresholds?: any[];
 };
 
 type GPUDashboardCardProps = GPUDashboardCardGenericProps & {
@@ -95,6 +97,7 @@ const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
   timeSerie,
   unit,
   maxDomain,
+  thresholds,
 }) => {
   const now = new Date();
   const getDatumLabel = ({ datum }) => {
@@ -109,9 +112,12 @@ const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
   }));
 
   if (!maxDomain) {
-    const max = Math.max(...timeSerie.map((pair) => pair.value));
-    maxDomain = max * 1.2; // Add 20%. Can we have minus values for something??
+    // TODO: read that from GPU info once it is available
+    maxDomain = Math.max(...timeSerie.map((pair) => pair.value));
   }
+
+  const actualInPercents = (scalarValue / maxDomain) * 100;
+  maxDomain = maxDomain * 1.2; // Add 20% for the sparkline chart. Can we have minus values for something??
 
   return (
     <>
@@ -120,10 +126,11 @@ const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
           ariaDesc={title}
           ariaTitle={ariaTitle}
           constrainToVisibleArea={true}
-          data={{ x: title, y: scalarValue }}
+          data={{ x: title, y: actualInPercents }}
           labels={({ datum }) => (datum.x ? `${datum.x}: ${datum.y}${unit}` : null)}
           // subTitle=""
           title={`${scalarValue}${unit}`}
+          thresholds={thresholds}
         />
       </CardBody>
       <CardFooter>
@@ -157,7 +164,8 @@ const GPUDashboardCardInfo: React.FC<GPUDashboardCardInfoProps> = ({
 }) => (
   <Popover
     aria-label="Dashboard card description"
-    maxWidth="15rem"
+    maxWidth="20rem"
+    minWidth="15rem"
     headerContent={<div>{header}</div>}
     bodyContent={
       <Stack hasGutter>
@@ -308,7 +316,10 @@ const GPUDashboard: React.FC = () => {
             />
           </StackItem>
           <StackItem>
-            <Gallery hasGutter>
+            <Gallery
+              hasGutter
+              // minWidths={{ default: '20rem' }}
+            >
               <GPUDashboardCard
                 title={t('GPU utilization')}
                 ariaTitle={t('Donut GPU utilization')}
@@ -339,7 +350,7 @@ const GPUDashboard: React.FC = () => {
                 timeQuery={`max_over_time(DCGM_FI_DEV_GPU_TEMP{UUID="${gpuUuid}"}[5m])[60m:5m]`}
                 // TODO: What about Fahrenheits?
                 unit="°C"
-                // maxDomain={100}
+                thresholds={[{ value: 50 }, { value: 70 }]}
                 info={
                   <GPUDashboardCardInfo
                     header={t('GPU temperature')}
