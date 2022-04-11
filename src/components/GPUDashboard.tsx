@@ -12,10 +12,15 @@ import {
   CardBody,
   CardFooter,
   CardTitle,
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListTerm,
   Dropdown,
   DropdownItem,
   DropdownPosition,
   DropdownToggle,
+  Flex,
+  FlexItem,
   Gallery,
   Page,
   PageSection,
@@ -23,6 +28,7 @@ import {
   Skeleton,
   Stack,
   StackItem,
+  Title,
 } from '@patternfly/react-core';
 import { CaretDownIcon } from '@patternfly/react-icons';
 import { useTranslation } from 'react-i18next';
@@ -274,12 +280,45 @@ const GPUDropdown: React.FC<GPUDropdownProps> = ({ selectedUuid, gpus, onSelect,
   );
 };
 
+type GPUInfoCardProps = {
+  selectedGpu?: GPUInfo;
+};
+
+const GPUInfoCard: React.FC<GPUInfoCardProps> = ({ selectedGpu }) => {
+  const { t } = useTranslation('plugin__console-plugin-nvidia-gpu');
+
+  return (
+    <Card isFlat>
+      <CardBody>
+        {selectedGpu ? (
+          <DescriptionList>
+            <Flex>
+              <FlexItem>
+                <DescriptionListTerm>{t('Model')}</DescriptionListTerm>
+                <DescriptionListDescription>{selectedGpu.modelName}</DescriptionListDescription>
+              </FlexItem>
+
+              <FlexItem>
+                <DescriptionListTerm>{t('Hostname')}</DescriptionListTerm>
+                <DescriptionListDescription>{selectedGpu.hostname}</DescriptionListDescription>
+              </FlexItem>
+            </Flex>
+          </DescriptionList>
+        ) : (
+          t('No GPU can be found in the cluster.')
+        )}
+      </CardBody>
+    </Card>
+  );
+};
+
 const GPUDashboard: React.FC = () => {
   const { t } = useTranslation('plugin__console-plugin-nvidia-gpu');
   const [gpus, gpusError, gpusLoading] = useAllGPUsInfo();
-  const [gpuUuid, setGpuUuid] = React.useState<string>('GPU-a458dc79-5837-1cd9-120f-99a4c1e0cb66'); // GPU-43d4af7b-4cbb-1577-c1d4-e908416fda4a , GPU-a458dc79-5837-1cd9-120f-99a4c1e0cb66
+  const [gpuUuid, setGpuUuid] = React.useState<string>(); // GPU-43d4af7b-4cbb-1577-c1d4-e908416fda4a , GPU-a458dc79-5837-1cd9-120f-99a4c1e0cb66
 
   const loading = !gpuUuid;
+  const selectedGpu = gpus?.find((gpuInfo) => gpuInfo.uuid === gpuUuid);
 
   React.useEffect(() => {
     if (!gpuUuid && gpus?.length) {
@@ -306,14 +345,24 @@ const GPUDashboard: React.FC = () => {
                 {t('No GPU can be found in the cluster.')}
               </Alert>
             )}
-
-            {/* TODO: Show info about the selected GPU */}
-            <GPUDropdown
-              gpus={gpus}
-              onSelect={setGpuUuid}
-              selectedUuid={gpuUuid}
-              className="gpu-dashboard__dropdown-gpus"
-            />
+          </StackItem>
+          <StackItem>
+            <Title headingLevel="h1">{t('GPUs')}</Title>
+          </StackItem>
+          <StackItem>
+            <Flex>
+              <FlexItem>
+                <GPUInfoCard selectedGpu={selectedGpu} />
+              </FlexItem>
+              <FlexItem align={{ default: 'alignRight' }}>
+                <GPUDropdown
+                  gpus={gpus}
+                  onSelect={setGpuUuid}
+                  selectedUuid={gpuUuid}
+                  className="gpu-dashboard__dropdown-gpus"
+                />
+              </FlexItem>
+            </Flex>
           </StackItem>
           <StackItem>
             <Gallery
