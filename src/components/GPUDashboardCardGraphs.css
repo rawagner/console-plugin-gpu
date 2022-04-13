@@ -3,3 +3,9 @@
   border-color: black;
   border-top-width: 1px;
 }
+
+/* Sparkline chart 
+g[role=presentation] text {
+  font-size: 20px !important;
+}
+*/

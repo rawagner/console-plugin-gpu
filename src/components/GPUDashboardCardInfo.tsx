@@ -27,6 +27,8 @@ export const GPUDashboardCardInfo: React.FC<GPUDashboardCardInfoProps> = ({
       </Stack>
     }
   >
-    <BlueInfoCircleIcon className="gpu-dashboard-card-info__icon" />
+    <a>
+      <BlueInfoCircleIcon className="gpu-dashboard-card-info__icon" />
+    </a>
   </Popover>
 );

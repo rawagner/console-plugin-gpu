@@ -69,7 +69,7 @@ export const GPUDashboardCard: React.FC<GPUDashboardCardProps> = ({
     maxDomain ||
     Math.max(...(timeSerie || []).map((pair) => pair.value), scalarValue, maxValue) ||
     0;
-  console.log('--- Found maximum for ', title, ': ', maximum);
+
   const error = errorActual && errorTime;
   loading = loading || (loadingActual && loadingTime) || scalarValue === undefined || !timeSerie;
 

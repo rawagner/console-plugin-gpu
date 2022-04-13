@@ -57,7 +57,12 @@ export const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
           ariaDesc={rangeDescription}
           ariaTitle={rangeTitle}
           containerComponent={
-            <ChartVoronoiContainer labels={getDatumLabel} constrainToVisibleArea={true} />
+            <ChartVoronoiContainer
+              // width={50}
+              // responsive={false}
+              labels={getDatumLabel}
+              constrainToVisibleArea={true}
+            />
           }
           height={90}
           maxDomain={{ y: maxDomain }}

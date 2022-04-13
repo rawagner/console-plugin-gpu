@@ -13,12 +13,12 @@ import {
 } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 import { useAllGPUsInfo } from '../utils/gpuInfo';
-
-import './GPUDashboard.css';
 import { GPUInfoCard } from './GPUInfoCard';
 import { GPUDropdown } from './GPUDropdown';
 import { GPUDashboardCard } from './GPUDashboardCard';
 import { GPUDashboardCardInfo } from './GPUDashboardCardInfo';
+
+import './GPUDashboard.css';
 
 /* Chaotic list of TODOs:
   - Add "New" badge in gpu-dashboard nav item - replace string by a component in console-extensions.json
@@ -122,7 +122,7 @@ const GPUDashboard: React.FC = () => {
                 unit="°C"
                 thresholds={
                   // TODO: Fine-tune that
-                  [{ value: 50 }, { value: 70 }]
+                  [{ value: 60 }, { value: 80 }]
                 }
                 info={
                   <GPUDashboardCardInfo
