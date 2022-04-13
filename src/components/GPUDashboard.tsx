@@ -22,11 +22,9 @@ import { GPUDashboardCardInfo } from './GPUDashboardCardInfo';
 
 /* Chaotic list of TODOs:
   - Add "New" badge in gpu-dashboard nav item - replace string by a component in console-extensions.json
-  - add GPU Info component (with its details)
   - tune polling interval
   - card sizes on different displayes
   - tune thresholds
-  - read maximum for non-percentage metrics (use either GPU-info or find maximum over all-time Prometheus data)
 */
 
 // https://issues.redhat.com/browse/MGMT-9263
@@ -95,8 +93,8 @@ const GPUDashboard: React.FC = () => {
                 rangeDescription={t('Sparkline GPU utilization')}
                 actualQuery={`DCGM_FI_DEV_GPU_UTIL{UUID="${gpuUuid}"}`}
                 timeQuery={`avg_over_time(DCGM_FI_DEV_GPU_UTIL{UUID="${gpuUuid}"}[5m])[60m:5m]`}
-                unit="%"
                 maxDomain={100}
+                unit="%"
                 info={
                   <GPUDashboardCardInfo
                     header={t('GPU utilization')}
@@ -116,9 +114,16 @@ const GPUDashboard: React.FC = () => {
                 rangeDescription={t('Sparkline GPU temperature')}
                 actualQuery={`DCGM_FI_DEV_GPU_TEMP{UUID="${gpuUuid}"}`}
                 timeQuery={`max_over_time(DCGM_FI_DEV_GPU_TEMP{UUID="${gpuUuid}"}[5m])[60m:5m]`}
+                maximumQuery={
+                  // maximum per maxs of all GPUs
+                  'max(max_over_time(DCGM_FI_DEV_GPU_TEMP[1y]))'
+                }
                 // TODO: What about Fahrenheits?
                 unit="°C"
-                thresholds={[{ value: 50 }, { value: 70 }]}
+                thresholds={
+                  // TODO: Fine-tune that
+                  [{ value: 50 }, { value: 70 }]
+                }
                 info={
                   <GPUDashboardCardInfo
                     header={t('GPU temperature')}
@@ -138,6 +143,7 @@ const GPUDashboard: React.FC = () => {
                 rangeDescription={t('Sparkline GPU power consumption')}
                 actualQuery={`DCGM_FI_DEV_POWER_USAGE{UUID="${gpuUuid}"}`}
                 timeQuery={`max_over_time(DCGM_FI_DEV_POWER_USAGE{UUID="${gpuUuid}"}[5m])[60m:5m]`}
+                maximumQuery="max(max_over_time(DCGM_FI_DEV_POWER_USAGE[1y]))"
                 unit="W"
                 info={
                   <GPUDashboardCardInfo
@@ -158,7 +164,7 @@ const GPUDashboard: React.FC = () => {
                 rangeDescription={t('Sparkline GPU clock speed')}
                 actualQuery={`DCGM_FI_DEV_SM_CLOCK{UUID="${gpuUuid}"}`}
                 timeQuery={`avg_over_time(DCGM_FI_DEV_SM_CLOCK{UUID="${gpuUuid}"}[5m])[60m:5m]`}
-                // TODO: Conversion to GHz??
+                maximumQuery="max(max_over_time(DCGM_FI_DEV_SM_CLOCK[1y]))"
                 unit="MHz"
                 info={
                   <GPUDashboardCardInfo
@@ -179,7 +185,7 @@ const GPUDashboard: React.FC = () => {
                 rangeDescription={t('Sparkline GPU memory clock speed')}
                 actualQuery={`DCGM_FI_DEV_MEM_CLOCK{UUID="${gpuUuid}"}`}
                 timeQuery={`avg_over_time(DCGM_FI_DEV_MEM_CLOCK{UUID="${gpuUuid}"}[5m])[60m:5m]`}
-                // TODO: Conversion to GHz??
+                maximumQuery="max(max_over_time(DCGM_FI_DEV_MEM_CLOCK[1y]))"
                 unit="MHz"
                 info={
                   <GPUDashboardCardInfo
@@ -200,8 +206,8 @@ const GPUDashboard: React.FC = () => {
                 rangeDescription={t('Sparkline GPU memory utilization')}
                 actualQuery={`DCGM_FI_DEV_MEM_COPY_UTIL{UUID="${gpuUuid}"}`}
                 timeQuery={`avg_over_time(DCGM_FI_DEV_MEM_COPY_UTIL{UUID="${gpuUuid}"}[5m])[60m:5m]`}
-                unit="%"
                 maxDomain={100}
+                unit="%"
                 info={
                   <GPUDashboardCardInfo
                     header={t('GPU memory utilization')}

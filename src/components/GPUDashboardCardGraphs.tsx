@@ -9,6 +9,8 @@ import { CardBody, CardFooter } from '@patternfly/react-core';
 import { humanize } from '@openshift-console/dynamic-plugin-sdk';
 import { GPUDashboardCardGraphsProps } from './types';
 
+import './GPUDashboardCardGraphs.css';
+
 export const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
   title,
   ariaTitle,
@@ -32,13 +34,8 @@ export const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
     y: pair.value,
   }));
 
-  if (!maxDomain) {
-    // TODO: read that from GPU info once it is available
-    maxDomain = Math.max(...timeSerie.map((pair) => pair.value));
-  }
-
-  const actualInPercents = (scalarValue / maxDomain) * 100;
-  maxDomain = maxDomain * 1.2; // Add 20% for the sparkline chart. Can we have minus values for something??
+  const actualInPercents = maxDomain ? (scalarValue / maxDomain) * 100 : 0;
+  // maxDomain = maxDomain * 1.2; // Add 20% for the sparkline chart. Can we have minus values for something??
 
   return (
     <>
@@ -48,13 +45,14 @@ export const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
           ariaTitle={ariaTitle}
           constrainToVisibleArea={true}
           data={{ x: title, y: actualInPercents }}
-          labels={({ datum }) => (datum.x ? `${datum.x}: ${datum.y}${unit}` : null)}
+          labels={({ datum }) => (datum.x ? `${title}: ${scalarValue}${unit}` : null)}
+          // labels={({ datum }) => (datum.x ? `${datum.x}: ${datum.y}${unit}` : null)}
           // subTitle=""
           title={`${scalarValue}${unit}`}
           thresholds={thresholds}
         />
       </CardBody>
-      <CardFooter>
+      <CardFooter className="gpu-dashboard-card-graphs-footer">
         <ChartGroup
           ariaDesc={rangeDescription}
           ariaTitle={rangeTitle}

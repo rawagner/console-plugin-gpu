@@ -18,11 +18,12 @@ const GPUDashboardCardLoading: React.FC = () => {
 export const GPUDashboardCard: React.FC<GPUDashboardCardProps> = ({
   actualQuery,
   timeQuery,
+  maximumQuery,
   loading,
   info,
   ...props
 }) => {
-  const { title } = props;
+  const { title, maxDomain } = props;
 
   //   {
   //   /** Delay between polling requests */
@@ -41,6 +42,7 @@ export const GPUDashboardCard: React.FC<GPUDashboardCardProps> = ({
   //   /** A vector-query search parameter */
   //   timespan?: number;
   // };
+
   const [resultActual, errorActual, loadingActual] = usePrometheusPoll({
     endpoint: PrometheusEndpoint.QUERY,
     query: actualQuery,
@@ -51,9 +53,23 @@ export const GPUDashboardCard: React.FC<GPUDashboardCardProps> = ({
     query: timeQuery,
   });
 
+  const [max] = usePrometheusPoll({
+    endpoint: PrometheusEndpoint.QUERY,
+    // Does nothing if query is falsy
+    query: maximumQuery,
+  });
+
   const scalarValue = getPrometheusResultScalarNumber(resultActual);
   const timeSerie = getPrometheusResultTimeSerie(resultTime);
+  const maxValue = getPrometheusResultScalarNumber(max);
 
+  // Only if maxDomain is not provided.
+  // Find maximum from both historical- and time- series. Avoids timing issue with polling.
+  const maximum =
+    maxDomain ||
+    Math.max(...(timeSerie || []).map((pair) => pair.value), scalarValue, maxValue) ||
+    0;
+  console.log('--- Found maximum for ', title, ': ', maximum);
   const error = errorActual && errorTime;
   loading = loading || (loadingActual && loadingTime) || scalarValue === undefined || !timeSerie;
 
@@ -66,7 +82,12 @@ export const GPUDashboardCard: React.FC<GPUDashboardCardProps> = ({
       {error && <GPUDashboardCardError error={error} />}
       {!error && loading && <GPUDashboardCardLoading />}
       {!error && !loading && (
-        <GPUDashboardCardGraphs {...props} scalarValue={scalarValue} timeSerie={timeSerie} />
+        <GPUDashboardCardGraphs
+          {...props}
+          scalarValue={scalarValue}
+          timeSerie={timeSerie}
+          maxDomain={maximum}
+        />
       )}
     </Card>
   );

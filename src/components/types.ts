@@ -14,6 +14,7 @@ export type GPUDashboardCardGenericProps = {
 export type GPUDashboardCardProps = GPUDashboardCardGenericProps & {
   actualQuery: string;
   timeQuery: string;
+  maximumQuery?: string;
   loading: boolean;
   info?: React.ReactElement;
 };

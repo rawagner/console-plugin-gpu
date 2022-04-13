@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Popover, Stack, StackItem } from '@patternfly/react-core';
 import { BlueInfoCircleIcon } from '@openshift-console/dynamic-plugin-sdk';
 
+import './GPUDashboardCardInfo.css';
+
 type GPUDashboardCardInfoProps = {
   header: string;
   actualInfo: string;
@@ -25,6 +27,6 @@ export const GPUDashboardCardInfo: React.FC<GPUDashboardCardInfoProps> = ({
       </Stack>
     }
   >
-    <BlueInfoCircleIcon className="gpu-dashboard__card-info-icon" />
+    <BlueInfoCircleIcon className="gpu-dashboard-card-info__icon" />
   </Popover>
 );
