@@ -39,5 +39,7 @@
   "Sparkline GPU memory utilization": "Sparkline GPU memory utilization",
   "Sparkline GPU power consumption": "Sparkline GPU power consumption",
   "Sparkline GPU temperature": "Sparkline GPU temperature",
-  "Sparkline GPU utilization": "Sparkline GPU utilization"
+  "Sparkline GPU utilization": "Sparkline GPU utilization",
+  "Pod": "Pod",
+  "Model": "Model"
 }

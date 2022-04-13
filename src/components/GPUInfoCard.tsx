@@ -30,7 +30,7 @@ export const GPUInfoCard: React.FC<GPUInfoCardProps> = ({ selectedGpu }) => {
               </FlexItem>
 
               <FlexItem>
-                <DescriptionListTerm>{t('Hostname')}</DescriptionListTerm>
+                <DescriptionListTerm>{t('Pod')}</DescriptionListTerm>
                 <DescriptionListDescription>{selectedGpu.hostname}</DescriptionListDescription>
               </FlexItem>
             </Flex>
