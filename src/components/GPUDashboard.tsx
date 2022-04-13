@@ -2,11 +2,11 @@ import * as React from 'react';
 import {
   Alert,
   AlertVariant,
-  Flex,
-  FlexItem,
   Gallery,
   Page,
   PageSection,
+  Split,
+  SplitItem,
   Stack,
   StackItem,
   Title,
@@ -70,19 +70,19 @@ const GPUDashboard: React.FC = () => {
             <Title headingLevel="h1">{t('GPUs')}</Title>
           </StackItem>
           <StackItem>
-            <Flex>
-              <FlexItem>
+            <Split hasGutter>
+              <SplitItem isFilled>
                 <GPUInfoCard selectedGpu={selectedGpu} />
-              </FlexItem>
-              <FlexItem align={{ default: 'alignRight' }}>
+              </SplitItem>
+              <SplitItem>
                 <GPUDropdown
                   gpus={gpus}
                   onSelect={setGpuUuid}
                   selectedUuid={gpuUuid}
                   className="gpu-dashboard__dropdown-gpus"
                 />
-              </FlexItem>
-            </Flex>
+              </SplitItem>
+            </Split>
           </StackItem>
           <StackItem>
             <Gallery hasGutter>

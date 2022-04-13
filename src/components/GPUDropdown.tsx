@@ -1,7 +1,16 @@
 import * as React from 'react';
-import { Dropdown, DropdownItem, DropdownPosition, DropdownToggle } from '@patternfly/react-core';
+import {
+  Card,
+  CardBody,
+  Dropdown,
+  DropdownItem,
+  DropdownPosition,
+  DropdownToggle,
+} from '@patternfly/react-core';
 import { CaretDownIcon } from '@patternfly/react-icons';
 import { GPUInfo } from '../utils/gpuInfo';
+
+import './GPUDropdown.css';
 
 type GPUDropdownProps = {
   gpus?: GPUInfo[];
@@ -32,17 +41,21 @@ export const GPUDropdown: React.FC<GPUDropdownProps> = ({
     )) || [];
 
   return (
-    <Dropdown
-      onSelect={(e) => {
-        onSelect(e.currentTarget.id);
-        setOpen(false);
-      }}
-      dropdownItems={items}
-      toggle={toggle}
-      isOpen={isOpen}
-      className={className}
-      disabled={!gpus?.length}
-      position={DropdownPosition.right}
-    />
+    <Card className="gpu-dropdown__card">
+      <CardBody>
+        <Dropdown
+          onSelect={(e) => {
+            onSelect(e.currentTarget.id);
+            setOpen(false);
+          }}
+          dropdownItems={items}
+          toggle={toggle}
+          isOpen={isOpen}
+          className={className}
+          disabled={!gpus?.length}
+          position={DropdownPosition.right}
+        />
+      </CardBody>
+    </Card>
   );
 };
