@@ -23,8 +23,9 @@ import './GPUDashboard.css';
 /* Chaotic list of TODOs:
   - Add "New" badge in gpu-dashboard nav item - replace string by a component in console-extensions.json
   - tune polling interval
-  - card sizes on different displayes
   - tune thresholds
+  - card sizes on different displayes
+  - fix errors when loading i18n translations
 */
 
 // https://issues.redhat.com/browse/MGMT-9263
