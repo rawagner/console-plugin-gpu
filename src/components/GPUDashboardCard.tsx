@@ -43,12 +43,12 @@ export const GPUDashboardCard: React.FC<GPUDashboardCardProps> = ({
   //   timespan?: number;
   // };
 
-  const [resultActual, errorActual, loadingActual] = usePrometheusPoll({
+  const [resultActual, loadingActual, errorActual] = usePrometheusPoll({
     endpoint: PrometheusEndpoint.QUERY,
     query: actualQuery,
   });
 
-  const [resultTime, errorTime, loadingTime] = usePrometheusPoll({
+  const [resultTime, loadingTime, errorTime] = usePrometheusPoll({
     endpoint: PrometheusEndpoint.QUERY,
     query: timeQuery,
   });

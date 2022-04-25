@@ -35,7 +35,7 @@ import './GPUDashboard.css';
 
 const GPUDashboard: React.FC = () => {
   const { t } = useTranslation('plugin__console-plugin-nvidia-gpu');
-  const [gpus, gpusError, gpusLoading] = useAllGPUsInfo();
+  const [gpus, gpusLoading, gpusError] = useAllGPUsInfo();
   const [gpuUuid, setGpuUuid] = React.useState<string>(); // GPU-43d4af7b-4cbb-1577-c1d4-e908416fda4a , GPU-a458dc79-5837-1cd9-120f-99a4c1e0cb66
 
   const loading = !gpuUuid;

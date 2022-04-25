@@ -25,8 +25,8 @@ export type GPUInfo = {
  *
  * Since the details are not sufficiently exported atm (TODO: Add Jira link to track),
  * we hack it to get list of UUIDs at least.
- */ export const useAllGPUsInfo = (): [GPUInfo[], /* error */ any, /* loading */ boolean] => {
-  const [result, error, loading] = usePrometheusPoll({
+ */ export const useAllGPUsInfo = (): [GPUInfo[], /* loading */ boolean, /* error */ any] => {
+  const [result, loading, error] = usePrometheusPoll({
     endpoint: PrometheusEndpoint.QUERY,
     query: 'DCGM_FI_DEV_GPU_UTIL',
   });
@@ -43,7 +43,7 @@ export type GPUInfo = {
     [result],
   );
 
-  return [gpus, error, loading];
+  return [gpus, loading, error];
 };
 
 /**
