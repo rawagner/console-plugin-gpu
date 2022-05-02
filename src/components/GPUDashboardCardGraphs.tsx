@@ -6,7 +6,7 @@ import {
   ChartVoronoiContainer,
 } from '@patternfly/react-charts';
 import { CardBody, CardFooter } from '@patternfly/react-core';
-import { humanize } from '@openshift-console/dynamic-plugin-sdk';
+// import { humanize } from '@openshift-console/dynamic-plugin-sdk';
 import { GPUDashboardCardGraphsProps } from './types';
 
 import './GPUDashboardCardGraphs.css';
@@ -22,11 +22,11 @@ export const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
   maxDomain,
   thresholds,
 }) => {
-  const now = new Date();
-  const getDatumLabel = ({ datum }) => {
-    const dateTime = new Date(datum.x * 1000);
-    return `${humanize.fromNow(dateTime, now)}: ${datum.y}`;
-  };
+  // const now = new Date();
+  // const getDatumLabel = ({ datum }) => {
+  //   const dateTime = new Date(datum.x * 1000);
+  //   return `${humanize.fromNow(dateTime, now)}: ${datum.y}`;
+  // };
 
   const timeData = timeSerie.map((pair) => ({
     name: title,
@@ -60,7 +60,7 @@ export const GPUDashboardCardGraphs: React.FC<GPUDashboardCardGraphsProps> = ({
             <ChartVoronoiContainer
               // width={50}
               // responsive={false}
-              labels={getDatumLabel}
+              // labels={getDatumLabel}
               constrainToVisibleArea={true}
             />
           }
