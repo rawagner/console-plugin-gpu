@@ -6,3 +6,5 @@ export type Pod = K8sResourceCommon & {
     nodeSelector?: string;
   };
 };
+
+export const podReference = ['core', 'v1', 'Pod'].join('~');

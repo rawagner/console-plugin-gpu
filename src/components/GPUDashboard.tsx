@@ -85,7 +85,9 @@ const GPUDashboard: React.FC = () => {
           <StackItem>
             <GPUDashboardGraphs gpuUuid={gpuUuid} />
           </StackItem>
-          <StackItem>{/* <GPUPods gpuUuid={gpuUuid}  /> */}</StackItem>
+          <StackItem>
+            <GPUPods gpuUuid={gpuUuid} />
+          </StackItem>
         </Stack>
       </PageSection>
     </Page>
