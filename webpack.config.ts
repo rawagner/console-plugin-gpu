@@ -52,14 +52,15 @@ const config: Configuration = {
     static: './dist',
     port: 9001,
     headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Authorization"
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization',
+    },
+    devMiddleware: {
+      writeToDisk: true,
     },
   },
-  plugins: [
-    new ConsoleRemotePlugin(),
-  ],
+  plugins: [new ConsoleRemotePlugin()],
   devtool: 'source-map',
   optimization: {
     chunkIds: 'named',
