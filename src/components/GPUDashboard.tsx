@@ -17,6 +17,7 @@ import { GPUDropdown } from './GPUDropdown';
 import { GPUDashboardGraphs } from './GPUDashboardGraphs';
 
 import './GPUDashboard.css';
+import { GPUPods } from './GPUPods';
 
 /* Chaotic list of TODOs:
   - Add "New" badge in gpu-dashboard nav item - replace string by a component in console-extensions.json
