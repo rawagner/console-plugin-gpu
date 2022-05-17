@@ -13,8 +13,8 @@
     "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json,md,scss,yaml,yml}'"
   },
   "devDependencies": {
-    "@openshift-console/dynamic-plugin-sdk": "file:../console/frontend/packages/console-dynamic-plugin-sdk/dist/core",
-    "@openshift-console/dynamic-plugin-sdk-webpack": "file:../console/frontend/packages/console-dynamic-plugin-sdk/dist/webpack",
+    "@openshift-console/dynamic-plugin-sdk": "0.0.10",
+    "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.6",
     "@patternfly/react-charts": "^6.51.19",
     "@patternfly/react-core": "4.162.2",
     "@patternfly/react-icons": "^4.49.19",
