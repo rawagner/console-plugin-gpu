@@ -16,17 +16,15 @@ const DeploymentModel: K8sKind = {
   labelPluralKey: 'Deployments',
 };
 
-export const handler = (setFeatureFlag: SetFeatureFlag) => {
-  // const [deploymentModel] = useK8sModel(
-  //   getGroupVersionKindForResource({ apiVersion: 'apps/v1', kind: 'Deployment' }),
-  // );
-
-  k8sGet({ model: DeploymentModel, name: 'gpu-operator', ns: 'nvidia-gpu-operator' })
-    .then(() => {
-      console.info('NVIDIA GPU operator detected.');
-      setFeatureFlag('GPU_OPERATOR', true);
-    })
-    .catch(() => {
-      console.info('Can not find NVIDIA GPU operator.');
+export const handler = async (setFeatureFlag: SetFeatureFlag) => {
+  try {
+    await k8sGet({
+      model: DeploymentModel,
+      name: 'gpu-operator',
+      ns: 'nvidia-gpu-operator',
     });
+    setFeatureFlag('GPU_OPERATOR', true);
+  } catch (err) {
+    setFeatureFlag('GPU_OPERATOR', false);
+  }
 };
