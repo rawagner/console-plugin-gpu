@@ -8,3 +8,5 @@
 // t('plugin__console-plugin-nvidia-gpu~GPU Encoder/Decoder')
 // t('plugin__console-plugin-nvidia-gpu~GPUs')
 // t('plugin__console-plugin-nvidia-gpu~GPUs health')
+
+export const i18nNs = 'plugin__console-plugin-nvidia-gpu';

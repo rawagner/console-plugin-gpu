@@ -1,24 +1,18 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  K8sResourceCommon,
   useK8sWatchResource,
   InventoryItem,
   InventoryItemTitle,
   InventoryItemLoading,
 } from '@openshift-console/dynamic-plugin-sdk';
-
-type NodeKind = K8sResourceCommon & {
-  status?: {
-    capacity?: {
-      'nvidia.com/gpu': string;
-    };
-  };
-};
+import { i18nNs } from '../../i18n';
+import { Node } from '../../resources';
+import { getMIGStrategy, getMixedMIGTypes } from '../../utils/mig';
 
 const GPUClusterInventory = () => {
-  const { t } = useTranslation('plugin__console-plugin-nvidia-gpu');
-  const [nodes, loaded, loadError] = useK8sWatchResource<NodeKind[]>({
+  const { t } = useTranslation(i18nNs);
+  const [nodes, loaded, loadError] = useK8sWatchResource<Node[]>({
     groupVersionKind: {
       kind: 'Node',
       version: 'v1',
@@ -29,9 +23,15 @@ const GPUClusterInventory = () => {
   let gpuCount = 0;
 
   nodes.forEach((node) => {
-    const gpus = node.status?.capacity?.['nvidia.com/gpu'];
-    if (gpus) {
-      gpuCount += Number.parseInt(gpus);
+    const migStrategy = getMIGStrategy(node);
+    if (migStrategy === 'mixed') {
+      const migTypes = getMixedMIGTypes(node);
+      Object.values(migTypes).forEach(({ count }) => (gpuCount += count));
+    } else {
+      const gpus = node.status?.capacity?.['nvidia.com/gpu'];
+      if (gpus) {
+        gpuCount += Number.parseInt(gpus);
+      }
     }
   });
 

@@ -4,6 +4,7 @@ import { CheckCircleIcon, InProgressIcon } from '@patternfly/react-icons';
 import { useTranslation } from 'react-i18next';
 import {
   HealthState,
+  PrometheusResponse,
   StatusPopupItem,
   StatusPopupSection,
 } from '@openshift-console/dynamic-plugin-sdk';
@@ -12,17 +13,12 @@ import {
   PrometheusHealthHandler,
   SubsystemHealth,
 } from '@openshift-console/dynamic-plugin-sdk/lib/extensions/dashboard-types';
-// import { PrometheusResponse } from '@openshift-console/dynamic-plugin-sdk/lib/api/prometheus-types';
 import { Link } from 'react-router-dom';
 import { global_palette_green_500 as okColor } from '@patternfly/react-tokens/dist/js/global_palette_green_500';
-
-//DCGM_FI_DEV_GPU_TEMP GPU temperature
-//DCGM_FI_DEV_MEMORY_TEMP Memory temperature - does not have any data
-
-//gpu_operator_node_cuda_ready ?
+import { i18nNs } from '../../i18n';
 
 const GPUStatus: React.FC<PrometheusHealthPopupProps> = ({ responses }) => {
-  const { t } = useTranslation('plugin__console-plugin-nvidia-gpu');
+  const { t } = useTranslation(i18nNs);
   const operatorHealth = getOperatorHealth(responses);
   const temperatureHealth = getTemperatureHealth(responses);
   return (
@@ -78,7 +74,7 @@ export const healthHandler: PrometheusHealthHandler = (responses) => {
 };
 
 type SubsystemHealthHandler = (
-  responses: { response: any; error: any }[],
+  responses: { response: PrometheusResponse; error: unknown }[],
 ) => SubsystemHealth & { icon?: React.ReactNode };
 
 const getTemperatureHealth: SubsystemHealthHandler = (responses) => {
@@ -94,7 +90,10 @@ const getTemperatureHealth: SubsystemHealthHandler = (responses) => {
     };
   }
 
-  const temperatures = response.data.result?.map((r) => Number.parseInt(r.value?.[1])); // TODO remove false-y values ?
+  const temperatures: number[] =
+    response.data.result
+      ?.filter((r) => r.value?.[1] !== undefined)
+      .map((r) => Number.parseInt(r.value?.[1] as string)) || []; // TODO remove false-y values ?
 
   temperatures.sort((a, b) => b - a);
 

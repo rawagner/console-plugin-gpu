@@ -15,17 +15,18 @@
   "devDependencies": {
     "@openshift-console/dynamic-plugin-sdk": "0.0.10",
     "@openshift-console/dynamic-plugin-sdk-webpack": "0.0.6",
-    "@patternfly/react-charts": "^6.51.19",
-    "@patternfly/react-core": "4.162.2",
+    "@openshift-console/plugin-shared": "^0.0.1",
+    "@patternfly/react-charts": "6.67.1",
+    "@patternfly/react-core": "4.214.1",
     "@patternfly/react-icons": "^4.49.19",
-    "@patternfly/react-table": "4.31.7",
+    "@patternfly/react-table": "4.75.2",
+    "@types/lodash": "^4.14.182",
     "@types/node": "^16.11.6",
     "@types/react": "^17.0.34",
     "@types/react-helmet": "^6.1.4",
     "@types/react-router-dom": "^5.3.2",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
     "@typescript-eslint/parser": "^5.3.0",
-    "classnames": "^2.3.1",
     "comment-json": "4.x",
     "css-loader": "^6.5.1",
     "eslint": "^8.1.0",
@@ -36,6 +37,8 @@
     "file-loader": "^6.2.0",
     "fuzzysearch": "^1.0.3",
     "i18next-parser": "^3.3.0",
+    "lodash": "^4.17.21",
+    "prettier": "^2.6.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-helmet": "^6.1.0",
@@ -57,10 +60,10 @@
     "description": "GPU plugin for OpenShift Console",
     "exposedModules": {
       "clusterOverview": "./utils/cluster-overview",
-      "clusterStatus": "./components/GPUStatus",
-      "clusterInventory": "./components/GPUClusterInventory",
-      "gpuOperatorFeatureFlag": "./utils/gpuOperatorFeatureFlag",
-      "gpuDashboard": "./components/GPUDashboard"
+      "units": "./utils/units",
+      "clusterStatus": "./components/ClusterOverview/GPUStatus",
+      "clusterInventory": "./components/ClusterOverview/GPUClusterInventory",
+      "gpuDashboard": "./components/GPUDashboard/GPUDashboard"
     },
     "dependencies": {
       "@console/pluginAPI": "*"
