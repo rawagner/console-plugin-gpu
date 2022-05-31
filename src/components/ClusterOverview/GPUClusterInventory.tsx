@@ -34,7 +34,7 @@ const GPUClusterInventory = () => {
     }
   });
 
-  let title: React.ReactNode = t('{{count}} Graphics Cards', { count: gpuCount });
+  let title: React.ReactNode = t('{{count}} Graphics Card', { count: gpuCount });
   if (loadError) {
     title = t('Graphics Cards');
   } else if (!loaded) {

@@ -104,5 +104,25 @@
     "flags": {
       "required": ["GPU_OPERATOR"]
     }
+  },
+  {
+    "type": "console.project-overview/inventory-item",
+    "properties": {
+      "component": { "$codeRef": "projectInventory.default" }
+    },
+    "flags": {
+      "required": ["GPU_OPERATOR"]
+    }
+  },
+  {
+    "type": "console.project-overview/utilization-item",
+    "properties": {
+      "title": "%plugin__console-plugin-nvidia-gpu~Pods requesting GPU%",
+      "utilizationQuery": "count(count by (UUID,GPU_I_ID) (DCGM_FI_PROF_GR_ENGINE_ACTIVE{exported_pod=~\".+\"})) or vector(0)",
+      "humanize": { "$codeRef": "units.humanizeNumber" }
+    },
+    "flags": {
+      "required": ["GPU_OPERATOR"]
+    }
   }
 ]

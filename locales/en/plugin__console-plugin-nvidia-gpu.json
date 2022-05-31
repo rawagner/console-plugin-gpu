@@ -1,6 +1,6 @@
 {
-  "{{count}} Graphics Cards": "{{count}} Graphics Cards",
-  "{{count}} Graphics Cards_plural": "{{count}} Graphics Cards",
+  "{{count}} Graphics Card": "{{count}} Graphics Card",
+  "{{count}} Graphics Card_plural": "{{count}} Graphics Cards",
   "Graphics Cards": "Graphics Cards",
   "No GPUs detected": "No GPUs detected",
   "NVIDIA, AMD and others": "NVIDIA, AMD and others",
@@ -73,7 +73,11 @@
   "View logs": "View logs",
   "View events": "View events",
   "Debug container {{name}}": "Debug container {{name}}",
+  "{{count}} GPU pod": "{{count}} GPU pod",
+  "{{count}} GPU pod_plural": "{{count}} GPU pods",
+  "GPU pods": "GPU pods",
   "GPU Power usage": "GPU Power usage",
   "GPU Encoder/Decoder": "GPU Encoder/Decoder",
-  "GPUs health": "GPUs health"
+  "GPUs health": "GPUs health",
+  "Pods requesting GPU": "Pods requesting GPU"
 }

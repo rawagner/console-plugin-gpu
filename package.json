@@ -67,7 +67,8 @@
       "gpuDashboard": "./components/GPUDashboard/GPUDashboard",
       "units": "./utils/units",
       "clusterOverview": "./utils/cluster-overview",
-      "gpuOperatorFeatureFlag": "./utils/gpuOperatorFeatureFlag"
+      "gpuOperatorFeatureFlag": "./utils/gpuOperatorFeatureFlag",
+      "projectInventory": "./components/ProjectOverview/GPUProjectInventory"
     },
     "dependencies": {
       "@console/pluginAPI": "*"
